@@ -1,4 +1,4 @@
-/*********************************************/
+    /*********************************************/
 /*  USER STORY -> As a user, I want [action] so  that [benefit]
     
   MVC ARCHITECTURE
@@ -22,6 +22,17 @@
   CONTROLLER
   -> application logic / bridge between view and model
   -> dispatches tasks to model and view
+
+  PUBLISHER
+  -> code that knows when to react
+
+  SUBSRIBER
+  -> Code that wants to react
+
+  PUBLISHER-SUBSCRIBER
+  -> subscribe to publisher by passing in subscriber function
+  -> event should be handled in the controller
+  -> event should be listened for in the view
 
 /*********************************************/
 //import from model and view
@@ -58,10 +69,7 @@ const controlRecipes = async function () {
   }
 };
 
-//hash change event and load event listener
-['hashchange', 'load'].forEach(ev =>
-  window.addEventListener(ev, controlRecipes)
-);
-
-// window.addEventListener('hashchange', controlRecipes);
-// window.addEventListener('hashchange', controlRecipes);
+const init = function () {
+  recipeView.addHandlerRender(controlRecipes);
+};
+init();
