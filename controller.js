@@ -1,4 +1,4 @@
-    /*********************************************/
+/*********************************************/
 /*  USER STORY -> As a user, I want [action] so  that [benefit]
     
   MVC ARCHITECTURE
@@ -38,6 +38,7 @@
 //import from model and view
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
 
 import 'core-js/stable'; //polyfill
 import 'regenerator-runtime/runtime'; //polyfill async/await
@@ -65,11 +66,30 @@ const controlRecipes = async function () {
     //2. Rendering recipe
     recipeView.render(model.state.recipe);
   } catch (err) {
-    console.error(err);
+    recipeView.renderError();
   }
 };
 
+const controlSearchResults = async function() {
+  try {
+    // 1.) get query from search field
+    const query = searchView.getQuery();
+    if(!query) return;
+    
+    // 2.) Load search results
+    await model.loadSearchResults(query);
+
+    // 3) Render results
+    console.log(model.state.search.results); 
+  } catch(err) {
+    console.log(err);
+  }
+}
+controlSearchResults();
+
+
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  searchView.addHandlerSearch(controlSearchResults);
 };
 init();
