@@ -39,9 +39,15 @@
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
+import resultsView from './views/resultsView.js';
 
 import 'core-js/stable'; //polyfill
 import 'regenerator-runtime/runtime'; //polyfill async/await
+
+//hot module reloading from parcel
+if (module.hot) {
+  module.hot.accept();
+}
 
 const recipeContainer = document.querySelector('.recipe');
 
@@ -70,23 +76,25 @@ const controlRecipes = async function () {
   }
 };
 
-const controlSearchResults = async function() {
+const controlSearchResults = async function () {
   try {
     // 1.) get query from search field
     const query = searchView.getQuery();
-    if(!query) return;
-    
+    if (!query) return;
+
+    //render spinner in searching
+    resultsView.renderSpinner();
+
     // 2.) Load search results
     await model.loadSearchResults(query);
 
     // 3) Render results
-    console.log(model.state.search.results); 
-  } catch(err) {
+    resultsView.render(model.state.search.results);
+  } catch (err) {
     console.log(err);
   }
-}
+};
 controlSearchResults();
-
 
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
