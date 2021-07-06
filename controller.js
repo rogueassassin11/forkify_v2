@@ -1,4 +1,4 @@
-/*********************************************/
+    /*********************************************/
 /*  USER STORY -> As a user, I want [action] so  that [benefit]
     
   MVC ARCHITECTURE
@@ -34,9 +34,13 @@
   -> event should be handled in the controller
   -> event should be listened for in the view
 
+  Unique API Key - 7dbf5b75-2ed4-406c-a9ed-fb4b3cf0e4fb
+
+  FORKIFY API Docu = https://forkify-api.herokuapp.com/v2
 /*********************************************/
 //import from model and view
 import * as model from './model.js';
+import { MODAL_CLOSE_SEC } from './config.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultsView from './views/resultsView.js';
@@ -150,10 +154,29 @@ const controlAddBookmark = function () {
 };
 
 // adding recipe
-const controlAddRecipe = function (newRecipe) {
-  console.log(newRecipe);
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    // Show loading spinner
+    addRecipeView.renderSpinner();
 
-  // Upload the new recipe data
+    // Upload the new recipe data
+    await model.uploadRecipe(newRecipe);
+    console.log(model.state.recipe);
+
+    // Render the new recipe
+    recipeView.render(model.state.recipe);
+
+    // success message
+    addRecipeView.renderMessage();
+
+    // close form window
+    setTimeout(function () {
+      addRecipeView.toggleWindow();
+    }, MODAL_CLOSE_SEC * 1000);
+  } catch (err) {
+    console.error('!!!', err);
+    addRecipeView.renderError(err.message);
+  }
 };
 
 const init = function () {
