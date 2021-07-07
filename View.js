@@ -4,13 +4,26 @@ import icons from 'url:../../img/icons.svg';
 export default class View {
   _data;
 
-  render(data) {
+  /**
+   * Render the received object to the DOM
+   * @param {Object | Object[]} data The data to be rendered(eg. recipe)
+   * @param {boolean} [render = true] If false, create markup string instead of rendering to the DOM
+   * @returns {undefined | string} A markup string is returned if render=false
+   * @this {Object} View instance
+   * @author rougeassassin11
+   * @todo Finish implementation
+   */
+
+  render(data, render = true) {
     //if there is no data or if the data is an array but length is zero then return error message
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data;
     const markup = this._generateMarkup();
+
+    if (!render) return markup;
+
     this._clear();
     //insert the markup
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
